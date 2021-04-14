@@ -51,6 +51,13 @@ for n_neighbors, ax in zip([1, 3, 9], axes):
 # 下面将使用KNN算法来绘制计算精准度
 # 导入数据
 cancer = load_breast_cancer()
+print("cancer.keys():\n", cancer.keys())
+print("Shape of cancer data:", cancer.data.shape)
+print("Sample counts per class:\n",
+      {n: v for n, v in zip(cancer.target_names, np.bincount(cancer.target))})
+print("Feature names:\n", cancer.feature_names)
+
+# %%
 # 分割数据
 X_train, X_test, y_train, y_test = train_test_split(
     cancer.data, cancer.target, stratify=cancer.target, random_state=66)
@@ -82,10 +89,13 @@ plt.plot(X, y, 'o')
 plt.ylim(-3, 3)
 plt.xlabel("Feature")
 plt.ylabel("Target")
-# %%
 
+
+# %%
 mglearn.plots.plot_knn_regression(n_neighbors=1)
 mglearn.plots.plot_knn_regression(n_neighbors=3)
+
+
 # %%
 X, y = mglearn.datasets.make_wave(n_samples=40)
 # 拆分训练样本与测试样本
@@ -98,6 +108,8 @@ reg.fit(X_train, y_train)
 print("Test set predictions:\n{}".format(reg.predict(X_test)))
 # R^2决定系数 = score
 print("Test set R^2: {:.2f}".format(reg.score(X_test, y_test)))
+
+
 # %%
 fig, axes = plt.subplots(1, 3, figsize=(15, 4))
 # create 1,000 data points, evenly spaced between -3 and 3
@@ -110,5 +122,12 @@ for n_neighbors, ax in zip([1, 3, 9], axes):
     ax.plot(X_test, y_test, 'v', c=mglearn.cm2(1), markersize=8)
     axes[0].legend(["Model predictions", "Training data/target",
                     "Test data/target"], loc="best")
-
+    ax.set_title(
+        "{} neighbor(s)\n train score: {:.2f} test score: {:.2f}".format(
+            n_neighbors, reg.score(X_train, y_train),
+            reg.score(X_test, y_test)))
+    ax.set_xlabel("Feature")
+    ax.set_ylabel("Target")
+axes[0].legend(["Model predictions", "Training data/target",
+                "Test data/target"], loc="best")
 # %%
